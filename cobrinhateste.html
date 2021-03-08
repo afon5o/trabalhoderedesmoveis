@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jogo da Cobrinha</title>
+</head>
+<body>
+ 
+    <canvas id="stage" width="600" height="600"></canvas>
+    <script type="text/javascript">
+        
+        window.onload = function(){
+ 
+            var stage = document.getElementById('stage');
+            var ctx = stage.getContext("2d");
+            document.addEventListener("keydown", keyPush);
+            setInterval(game, 70);
+ 
+            const velocidade = 1;
+ 
+            var velx = vely = 0;
+            var px = 20;
+            var py = 25;
+            var tamanho_peca = 20;
+            var qnt_peca = 30;
+            var xapple = 10; 
+            var yapple = 5;
+ 
+            var trail = [];
+            tail = 4;
+ 
+            function game(){
+                px += velx;
+                py += vely;
+                if (px <0) {
+                    px = qnt_peca-1;
+                }
+                if (px > qnt_peca-1) {
+                    px = 0;
+                }
+                if (py < 0) {
+                    py = qnt_peca-1;
+                }
+                if (py > qnt_peca-1) {
+                    py = 0;
+                }
+ 
+                ctx.fillStyle = "black";
+                ctx.fillRect(0,0, stage.width, stage.height);
+ 
+                ctx.fillStyle = "red";
+                ctx.fillRect(xapple*tamanho_peca, yapple*tamanho_peca, tamanho_peca,tamanho_peca);
+ 
+                ctx.fillStyle = "green";
+                for (var i = 0; i < trail.length; i++) {
+                    ctx.fillRect(trail[i].x*tamanho_peca, trail[i].y*tamanho_peca, tamanho_peca-1,tamanho_peca-1);
+                    if (trail[i].x == px && trail[i].y == py)
+                    {
+                        velx = vely=0;
+                        tail =4;
+                    }
+                }
+ 
+                trail.push({x:px,y:py })
+                while (trail.length > tail) {
+                    trail.shift();
+                }
+ 
+                if (xapple==px && yapple==py){
+                    tail++;
+                    xapple = Math.floor(Math.random()*qnt_peca);
+                    yapple = Math.floor(Math.random()*qnt_peca);
+                }
+ 
+            }
+ 
+            function keyPush(event){
+ 
+                switch (event.keyCode) {
+                    case 37: // seta Esquerda
+                        velx = -velocidade;
+                        vely = 0;
+                        break;
+                    case 38: // seta Cima
+                        velx = 0;
+                        vely = -velocidade;
+                        break;
+                    case 39: // seta Direita
+                        velx = velocidade;
+                        vely = 0;
+                        break;
+                    case 40: // seta Baixo
+                        velx = 0;
+                        vely = velocidade;
+                        break;          
+                    default:                        
+                        break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
